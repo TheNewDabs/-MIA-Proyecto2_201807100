@@ -3,15 +3,226 @@ package main
 import (
 	"bufio"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"math"
 	"math/rand"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 	"unsafe"
-)
+	/*
+	   "github.com/gorilla/handlers"
+	   "github.com/gorilla/mux"
+	*/)
+
+/*
+func main() {
+	Inicializacion()
+	router := mux.NewRouter()
+
+	// Habilitar CORS para localhost:3000
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
+	origins := handlers.AllowedOrigins([]string{"http://localhost:3000"})
+
+	// Manejador para el endpoint "/"
+	router.HandleFunc("/", DataHandle).Methods("POST")
+
+	// Iniciar el servidor con CORS habilitado
+	log.Fatal(http.ListenAndServe(":4000", handlers.CORS(headers, methods, origins)(router)))
+}
+*/
+
+func main() {
+	Inicializacion()
+	AnalizarCodigo(`
+
+#Calificacion MIA 2023 PROYECTO 2
+# PARTE 1
+#CREACION DE DISCOS
+mkdisk >size=112 >unit=M >path=/home/dabs/parte2/disco.dsk
+mkdisk >size=1 >path="/home/dabs/parte1/eliminar.dsk"
+
+#pause
+
+#ELIMINACION DE DISCOS
+#Debe de dar error por que no existe disco con ese nombre
+rmdisk >path="/home/dabs/a eliminar disco/no_existo.dsk"
+
+rmdisk >path="/home/dabs/parte1/eliminar.dsk"
+
+#pause
+
+#CREACION DE PARTICIONES
+#Debe dar error por que no existe particion extendida
+fdisk >type=L >unit=M >name=PartX >size=5 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=P >unit=M >name=Part1 >size=25 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=P >unit=M >name=Part2 >size=25 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=P >unit=M >name=Part3 >size=25 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=E >unit=M >name=Part4 >size=25 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=L >unit=M >name=Part5 >size=5 >path=/home/dabs/parte2/disco.dsk
+fdisk >type=L >unit=M >name=Part6 >size=5 >path=/home/dabs/parte2/disco.dsk
+
+#pause
+
+#MOUNT CARNET DE EJEMPLO 201709362
+#001a
+mount >path=/home/dabs/parte2/disco.dsk >name=Part1
+#622a
+mount >path=/home/dabs/parte2/disco.dsk >name=Part2
+#623a
+mount >path=/home/dabs/parte2/disco.dsk >name=Part3
+
+#pause
+
+##repORTE DISCO
+rep >id=001a >Path=/home/dabs/part1/partticiones/disco.jpg >name=disk
+#seedisk >Path=/home/dabs/parte2/disco.dsk
+#rep >id=001a >Path=/home/dabs/parte1/particiones/disco.jpg >name=disk
+
+#pause
+
+# PARTE 2
+
+#MKFS A PARTICIONES
+mkfs >type=full >id=001a
+
+#pause
+
+##repORTES INICIALES
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/tree_1.pdf" >name=tree
+
+#pause
+
+#INICIO DE SESION
+#Debe dar error porque no existe el usuario roca
+Login >pwd=567 >user=roca >id=001a
+
+#Debe dar error porque no existe usuario logeado
+logout
+
+Login >pwd=123 >user=root >id=001a
+
+#pause
+
+#CREACION DE GRUPOS
+mkgrp >naMe=Archivos
+mkgrp >NamE=Arqui
+mkgrp >name="Compi 2"
+
+#pause
+
+#ELIMINACION DE GRUPOS
+rmgrp >name=Arqui
+
+#pause
+
+##repORTES FILE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/users_1.txt" >ruta="/users.txt" >name=file
+
+#pause
+
+#CREACION DE USUARIOS
+Mkusr >user="user1" >grp=root >pwd=user1
+Mkusr >user="user2" >grp="Compi 2" >pwd=user2
+Mkusr >user="user3" >grp="Compi 2" >pwd=user3
+
+#pause
+
+#ELIMINACION DE USUARIOS
+rmusr >user=user3
+
+#pause
+
+##repORTES FILE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/users_2.txt" >ruta="/users.txt" >name=file
+
+#pause
+
+#CREACION DE CARPETAS
+Mkdir >r >path=/home/dabs/archivos/mia/fase2
+Mkdir >r >path=/home/dabs/archivos/mia/carpeta2
+Mkdir >r >path=/home/dabs/archivos/mia/z
+Mkdir >path=/home/dabs/archivos/mia/carpeta2/a1
+Mkdir >path=/home/dabs/archivos/mia/carpeta2/a2
+Mkdir >path=/home/dabs/archivos/mia/carpeta2/a3
+
+#pause
+
+##repORTES TREE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/tree_2.pdf" >name=tree
+
+#pause
+
+#CREACION DE ARCHIVOS
+mkfile >path="/home/dabs/b1.txt" >size=15
+mkfile >path="/home/dabs/b2.txt" >size=15
+mkfile >path="/home/dabs/b3.txt" >size=15
+
+#Debe dar error ruta no existe
+mkfile >path="/home/dabs/Noexiste/c1.txt" >size=25
+
+#Debe dar error size negativo
+mkfile >path="/home/dabs/d1.txt" >size=-25
+
+#pause
+
+##repORTES TREE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/tree_3.pdf" >name=tree
+
+#pause
+
+mkfile >cont="/home/dabs/entrada.txt" >path="/home/dabs/bcont.txt"
+
+#pause
+
+##repORTES TREE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/tree_4.pdf" >name=tree
+
+##repORTES FILE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/users_3.txt" >ruta="/home/dabs/entrada.txt" >name=file
+
+##repORTES SUPER BLOQUE
+#rep >id=001a >Path="/home/dabs/parte2/#reportes/SB_1.pdf" >name=sb
+
+#pause
+
+logout
+
+#pause
+
+`)
+	fmt.Println("Consola: ")
+	fmt.Println(Console[:len(Console)-1])
+}
+
+func homeHandle(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "hola")
+}
+
+func DataHandle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		return
+	}
+	Console = ""
+	var data struct {
+		String string `json:"string"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Error al decodificar el cuerpo de la solicitud", http.StatusBadRequest)
+		return
+	}
+	data.String = data.String + ""
+	LeerComando(data.String)
+	fmt.Fprint(w, Console)
+}
+
+//Analizador
 
 type MBR struct {
 	mbr_tamano         []byte
@@ -106,65 +317,6 @@ type Session struct {
 var ActivePart [10]MountPart
 var Sesion Session
 var Console string
-
-func main() {
-	Inicializacion()
-	AnalizarCodigo(`mkdisk >size=50 >unit=m >path=/home/dabs/201807100/Disco1.dk
-mkdisk >size=50 >unit=m >path=/home/dabs/201807100/Disco2.dk
-rmdisk >path=/home/dabs/201807100/Disco2.dk
-
-fdisk >size=5 >path=/home/dabs/201807100/Disco1.dk >unit=m >name=Particion1 >fit=ff
-fdisk >S=1024 >path=/home/dabs/201807100/Disco1.dk >unit=k >name=Particion2
-fdisk >size=1024 >path=/home/dabs/201807100/Disco1.dk >unit=k >name=Particion2
-fdisk >size=10 >unit=m >path=/home/dabs/201807100/Disco1.dk >name=Particion3
-fdisk >size=25 >path=/home/dabs/201807100/Disco1.dk >name=Particion4 >fit=wf >unit=m 
-fdisk >size=25 >path=/home/dabs/201807100/Disco1.dk >name=Particion4 >fit=wf >unit=m
-#seedisk >path=/home/dabs/201807100/Disco1.dk
-
-mkdisk >size=25 >fit=bf >unit=m >path="/home/dabs/201807100/primer semestre/Disco2.dk"
-fdisk >size=500 >unit=k >path="/home/dabs/201807100/primer semestre/Disco2.dk" >name=Particion1 >fit=ff
-fdisk >size=1024 >path="/home/dabs/201807100/primer semestre/Disco2.dk" >unit=k >name=Particion2
-fdisk >size=10 >unit=m >path="/home/dabs/201807100/primer semestre/Disco2.dk" >name=Particion3
-fdisk >unit=k >size=4096 >path="/home/dabs/201807100/primer semestre/Disco2.dk" >type=E >name=Particion4 >fit=wf
-#seedisk >path="/home/dabs/201807100/primer semestre/Disco2.dk"
-
-mkdisk >unit=k >size=75 >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk"
-fdisk >size=5000 >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >name=Particion1 >unit=b
-fdisk >size=30 >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >unit=m >type=E >fit=bf >name=Particion2
-fdisk >size=5 >type=L >unit=m >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >name=Particion3
-fdisk >type=L >unit=k >size=4096 >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >name=Particion4
-fdisk >size=3 >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >name=Particion5 >unit=m
-seedisk >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk"
-mount >path=/home/dabs/201807100/Disco1.dk >name=Particion1
-mount >path="/home/dabs/201807100/primer semestre/Disco2.dk" >name=Particion2
-mount >path="/home/dabs/201807100/primer semestre/entrada1/Disco3.dk" >name=Particion3
-#seemounts
-
-mkfs >type=full >id=001a
-login >pwd=123 >user=root >id=001a
-
-mkgrp >name=prueba1
-mkgrp >name=prueba2
-mkgrp >name=prueba3
-rmgrp >name=prueba3
-
-mkusr >user="user1" >grp=prueba1 >pwf=user1
-mkusr >user="user2" >grp=prueba2 >pwf=user2
-mkusr >user="user3" >grp=prueba1 >pwf=user3
-mkusr >user="user4" >grp=prueba2 >pwf=user4
-rmusr >user=user4
-
-mkfile >size=10 >R >path=/home/archivos/dabs/fase2/docs/a.txt
-mkfile >size=0 >path=/home/archivos/dabs/fase2/docs/b.txt
-mkfile >size=20 >path=/home/archivos/dabs/fase2/docs/c.txt
-mkfile >path="/home/dabs/pruebas/hola.txt" >r >cont="/home/dabs/Documentos/GitHub/-MIA-Proyecto1_201807100/archivo2.txt"
-
-seeinfo >id=001a
-
-logout`)
-	fmt.Println("Consola: ")
-	fmt.Println(Console[:len(Console)-1])
-}
 
 func AnalizarCodigo(Entrada string) {
 	Lineas := strings.Split(Entrada, "\n")
@@ -478,7 +630,7 @@ func LeerComando(Linea string) bool {
 							Error = true
 						}
 						BUser = true
-					} else if strings.ToLower(Aux) == ">pwf" {
+					} else if strings.ToLower(Aux) == ">pwd" {
 						Pwd = Valor(&Linea)
 						if len(Pwd) < 1 {
 							Console += "Error, no puede ingresar una contraseña vacia\n"
@@ -500,7 +652,7 @@ func LeerComando(Linea string) bool {
 						BGrp = true
 					} else {
 						Error = true
-						Console += "Error, Parametro desconocido\n"
+						Console += "Error, " + Aux + "Parametro desconocido\n"
 					}
 				}
 				if BUser && BPwd && BGrp && !Error {
@@ -582,12 +734,68 @@ func LeerComando(Linea string) bool {
 			} else {
 				Console += "Error, No tiene sesion activa\n"
 			}
+		} else if strings.ToLower(Aux) == "mkdir" {
+			if Sesion.User != "" {
+				Path := ""
+				BPath := false
+				R := false
+				for Linea != "" && !Error {
+					Aux = Valor(&Linea)
+					if strings.ToLower(Aux) == ">path" {
+						Path = Valor(&Linea)
+						BPath = true
+					} else if strings.ToLower(Aux) == ">r" {
+						R = true
+					} else {
+						Error = true
+						Console += "Error, Parametro desconocido\n"
+					}
+				}
+				if BPath && !Error {
+					MKDIR(Path, R)
+				} else if !Error {
+					Console += "Error, Faltan parametros\n"
+				}
+			} else {
+				Console += "Error, No tiene sesion activa\n"
+			}
 		} else if strings.ToLower(Aux) == "pause" {
 			fmt.Println("Consola: ")
 			fmt.Println(Console[:len(Console)-1])
 			Console = ""
 			fmt.Print("Ejecución en pausa, oprima enter para continuar ")
 			fmt.Scanln()
+		} else if strings.ToLower(Aux) == "rep" {
+			Name := ""
+			Path := ""
+			ID := ""
+			Ruta := ""
+			BName := false
+			BPath := false
+			BID := false
+			for Linea != "" && !Error {
+				Aux = Valor(&Linea)
+				if strings.ToLower(Aux) == ">name" {
+					Name = Valor(&Linea)
+					BName = true
+				} else if strings.ToLower(Aux) == ">path" {
+					Path = Valor(&Linea)
+					BPath = true
+				} else if strings.ToLower(Aux) == ">id" {
+					ID = Valor(&Linea)
+					BID = true
+				} else if strings.ToLower(Aux) == ">ruta" {
+					Ruta = Valor(&Linea)
+				} else {
+					Error = true
+					Console += "Error, Parametro desconocido\n"
+				}
+			}
+			if BName && BPath && BID && !Error {
+				REP(Name, Path, ID, Ruta)
+			} else if !Error {
+				Console += "Error, Faltan parametros\n"
+			}
 		} else if strings.ToLower(Aux) == "seedisk" {
 			Path := ""
 			BPath := false
@@ -626,6 +834,9 @@ func LeerComando(Linea string) bool {
 			} else if !Error {
 				Console += "Error, Faltan parametros\n"
 			}
+		} else if strings.ToLower(Aux) == "exit" {
+			Console += "Ejecución finalizada\n"
+			return false
 		} else {
 			Console += "Error, comando desconocido\n"
 		}
@@ -699,11 +910,16 @@ func CrearDisco(Size int, Path string, Fit string, Unit string) {
 		err = binary.Write(archivo, binary.LittleEndian, Data)
 	}
 	EscribirMBR(Path, NewMBR)
+	Console += "Disco Creado con exito\n"
 }
 
 func EliminarDisco(Path string) {
-	os.Remove(Path)
-	Console += "Archivo Eliminado con exito\n"
+	if _, err := os.Stat(Path); os.IsNotExist(err) {
+		Console += "El archivo indicado no existe\n"
+	} else {
+		os.Remove(Path)
+		Console += "Archivo Eliminado con exito\n"
+	}
 }
 
 func CrearPartición(Size int, Path string, Name string, Unit string, Type string, Fit string) {
@@ -1357,7 +1573,6 @@ func Login(User string, Pass string, ID string) {
 			break
 		}
 	}
-	Activa := ActivePart[ActiveParticion]
 	for len(User) < 10 {
 		User += " "
 	}
@@ -1365,7 +1580,7 @@ func Login(User string, Pass string, ID string) {
 		Pass += " "
 	}
 	if ActiveParticion != -1 {
-
+		Activa := ActivePart[ActiveParticion]
 		PartitionStart := int(binary.LittleEndian.Uint32(Activa.part_start))
 		var SB SuperBloque
 		InitSuperBloque(&SB)
@@ -1659,7 +1874,7 @@ func MKFILE(Path string, R bool, Size int, Cont string) {
 						Error = true
 					}
 				} else {
-					Console += "Error, el path debe iniciar en la carpeta raiz\n"
+					Console += "Error, carpeta no creada\n"
 					Error = true
 				}
 			}
@@ -1681,6 +1896,270 @@ func MKFILE(Path string, R bool, Size int, Cont string) {
 	} else {
 		Console += "Error, el path debe iniciar en la carpeta raiz\n"
 	}
+}
+
+func MKDIR(Path string, R bool) {
+	PartitionStart := int(binary.LittleEndian.Uint32(Sesion.Active.part_start))
+	var SB SuperBloque
+	InitSuperBloque(&SB)
+	LeerSuperBloque(Sesion.Active.Path, &SB, PartitionStart)
+	InodeStart := int(binary.LittleEndian.Uint32(SB.s_inode_start))
+	if Path[0] == '/' {
+		InodeActual := int(binary.LittleEndian.Uint32(SB.s_inode_start))
+		Path = Path[1:]
+		SubPath := "/"
+		Error := false
+		for strings.Index(Path, "/") != -1 {
+			Name := Path[:strings.Index(Path, "/")]
+			Path = Path[strings.Index(Path, "/")+1:]
+			NextInodo := BuscarCarpeta(InodeActual, Name)
+			var InodoAux TablaInodo
+			InitInodo(&InodoAux)
+			if NextInodo != 4294967295 {
+				InodeActual = InodeStart + NextInodo*int(unsafe.Sizeof(InodoAux))
+			} else {
+				if R {
+					if ComprobarPermisos(InodeActual, false, true, false) {
+						CrearCarpeta(InodeActual, Name)
+						NextInodo = BuscarCarpeta(InodeActual, Name)
+						InodeActual = InodeStart + NextInodo*int(unsafe.Sizeof(InodoAux))
+					} else {
+						Console += "Error, no tiene permisos para crear una carpeta en \"" + SubPath + "\"\n"
+						Error = true
+					}
+				} else {
+					Console += "Error, carpeta no creada\n"
+					Error = true
+				}
+			}
+			SubPath = Name + "/"
+		}
+		if !Error {
+			if BuscarCarpeta(InodeActual, Path) == 4294967295 {
+				if ComprobarPermisos(InodeActual, false, true, false) {
+					CrearCarpeta(InodeActual, Path)
+					Console += "Archivo creado con exito\n"
+				} else {
+					Console += "Error, no tiene permisos para crear una carpeta en \"" + SubPath + "\"\n"
+					Error = true
+				}
+			} else {
+				Console += "Error, ya hay una carpeta con ese nombre en la carpeta indicada\n"
+			}
+		}
+	} else {
+		Console += "Error, el path debe iniciar en la carpeta raiz\n"
+	}
+}
+
+func REP(Name string, Path string, ID string, Ruta string) {
+	ActiveParticion := -1
+	for i := 0; i < 10; i++ {
+		if ActivePart[i].Active && ID == ActivePart[i].ID {
+			ActiveParticion = i
+			break
+		}
+	}
+	Temp := Sesion.clone()
+	Sesion.Active = ActivePart[ActiveParticion]
+	if ActiveParticion != -1 {
+		switch strings.ToLower(Name) {
+		case "disk":
+			REPDISK(Path, ActivePart[ActiveParticion])
+		case "tree":
+		case "file":
+		case "sb":
+		}
+	} else {
+		Console += "Error, ID no encontrada\n"
+	}
+	Sesion = Temp
+}
+
+//Funciones de reporte
+
+func REPDISK(Path string, Activa MountPart) {
+	var MBRDsk MBR
+	//Cabeza := -1
+	InitMBR(&MBRDsk)
+	LeerMBR(Sesion.Active.Path, &MBRDsk)
+	MBRTamano := int(binary.LittleEndian.Uint32(MBRDsk.mbr_tamano))
+	DiskName := Path
+	for strings.Index(DiskName, "/") != -1 {
+		DiskName = DiskName[strings.Index(DiskName, "/")+1:]
+	}
+	Report := "digraph G {\n\tMBR [\n\tshape=plaintext\n\tlabel=<\n\t\t<table border='0' cellborder='1' cellspacing='0'>\n\t\t\t<tr><td COLSPAN=\"8\">Reporte MBR</td></tr>\n\t\t\t<tr>\n\t\t\t\t<td>MBR</td>\n"
+	FinAnterior := int(unsafe.Sizeof(MBRDsk))
+	var Porcentaje float64
+	Porcentaje = 0
+	if MBRDsk.mbr_partition_1.part_status[0] == 'A' {
+		Part1Start := int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_1.part_start))
+		if FinAnterior != Part1Start {
+			Porcentaje = ((float64(Part1Start) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		if MBRDsk.mbr_partition_1.part_type[0] == 'P' {
+			Porcentaje = (float64(Part1Start) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Primaria</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		} else {
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Extendida</td></tr>\n\t\t\t\t\t<tr><td>\n\t\t\t\t\t\t<table border='0' cellborder='1' cellspacing='0'>\n\t\t\t\t\t\t\t<tr>\n"
+			FinAnterior = Part1Start
+			Aux := Part1Start
+			for Aux != 0 {
+				var EBRActual EBR
+				InitEBR(&EBRActual)
+				LeerEBR(Sesion.Active.Path, &EBRActual, Aux)
+				EBRStart := int(binary.LittleEndian.Uint32(EBRActual.part_start))
+				EBRSize := int(binary.LittleEndian.Uint32(EBRActual.part_size))
+				if FinAnterior != EBRStart {
+					Porcentaje = ((float64(EBRStart) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				Report += "\t\t\t\t\t\t\t\t<td>EBR</td>\n"
+				if EBRActual.part_status[0] == 'A' {
+					Porcentaje = (float64(EBRSize) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Logica</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				FinAnterior = EBRStart + EBRSize
+				Aux = int(binary.LittleEndian.Uint32(EBRActual.part_next))
+			}
+			if FinAnterior != Part1Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_1.part_size)) {
+				Porcentaje = ((float64(Part1Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_1.part_size))) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+				Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+			}
+			Report += "\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		FinAnterior = Part1Start + int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_1.part_size))
+	}
+
+	if MBRDsk.mbr_partition_2.part_status[0] == 'A' {
+		Part2Start := int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_2.part_start))
+		if FinAnterior != Part2Start {
+			Porcentaje = ((float64(Part2Start) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		if MBRDsk.mbr_partition_2.part_type[0] == 'P' {
+			Porcentaje = (float64(Part2Start) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Primaria</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		} else {
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Extendida</td></tr>\n\t\t\t\t\t<tr><td>\n\t\t\t\t\t\t<table border='0' cellborder='1' cellspacing='0'>\n\t\t\t\t\t\t\t<tr>\n"
+			FinAnterior = Part2Start
+			Aux := Part2Start
+			for Aux != 0 {
+				var EBRActual EBR
+				InitEBR(&EBRActual)
+				LeerEBR(Sesion.Active.Path, &EBRActual, Aux)
+				EBRStart := int(binary.LittleEndian.Uint32(EBRActual.part_start))
+				EBRSize := int(binary.LittleEndian.Uint32(EBRActual.part_size))
+				if FinAnterior != EBRStart {
+					Porcentaje = ((float64(EBRStart) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				Report += "\t\t\t\t\t\t\t\t<td>EBR</td>\n"
+				if EBRActual.part_status[0] == 'A' {
+					Porcentaje = (float64(EBRSize) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Logica</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				FinAnterior = EBRStart + EBRSize
+				Aux = int(binary.LittleEndian.Uint32(EBRActual.part_next))
+			}
+			if FinAnterior != Part2Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_2.part_size)) {
+				Porcentaje = ((float64(Part2Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_2.part_size))) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+				Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+			}
+			Report += "\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		FinAnterior = Part2Start + int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_2.part_size))
+	}
+
+	if MBRDsk.mbr_partition_3.part_status[0] == 'A' {
+		Part3Start := int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_3.part_start))
+		if FinAnterior != Part3Start {
+			Porcentaje = ((float64(Part3Start) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		if MBRDsk.mbr_partition_3.part_type[0] == 'P' {
+			Porcentaje = (float64(Part3Start) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Primaria</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		} else {
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Extendida</td></tr>\n\t\t\t\t\t<tr><td>\n\t\t\t\t\t\t<table border='0' cellborder='1' cellspacing='0'>\n\t\t\t\t\t\t\t<tr>\n"
+			FinAnterior = Part3Start
+			Aux := Part3Start
+			for Aux != 0 {
+				var EBRActual EBR
+				InitEBR(&EBRActual)
+				LeerEBR(Sesion.Active.Path, &EBRActual, Aux)
+				EBRStart := int(binary.LittleEndian.Uint32(EBRActual.part_start))
+				EBRSize := int(binary.LittleEndian.Uint32(EBRActual.part_size))
+				if FinAnterior != EBRStart {
+					Porcentaje = ((float64(EBRStart) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				Report += "\t\t\t\t\t\t\t\t<td>EBR</td>\n"
+				if EBRActual.part_status[0] == 'A' {
+					Porcentaje = (float64(EBRSize) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Logica</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				FinAnterior = EBRStart + EBRSize
+				Aux = int(binary.LittleEndian.Uint32(EBRActual.part_next))
+			}
+			if FinAnterior != Part3Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_3.part_size)) {
+				Porcentaje = ((float64(Part3Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_3.part_size))) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+				Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+			}
+			Report += "\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		FinAnterior = Part3Start + int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_3.part_size))
+	}
+
+	if MBRDsk.mbr_partition_4.part_status[0] == 'A' {
+		Part4Start := int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_4.part_start))
+		if FinAnterior != Part4Start {
+			Porcentaje = ((float64(Part4Start) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		if MBRDsk.mbr_partition_4.part_type[0] == 'P' {
+			Porcentaje = (float64(Part4Start) * 100) / float64(MBRTamano)
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Primaria</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+		} else {
+			Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Extendida</td></tr>\n\t\t\t\t\t<tr><td>\n\t\t\t\t\t\t<table border='0' cellborder='1' cellspacing='0'>\n\t\t\t\t\t\t\t<tr>\n"
+			FinAnterior = Part4Start
+			Aux := Part4Start
+			for Aux != 0 {
+				var EBRActual EBR
+				InitEBR(&EBRActual)
+				LeerEBR(Sesion.Active.Path, &EBRActual, Aux)
+				EBRStart := int(binary.LittleEndian.Uint32(EBRActual.part_start))
+				EBRSize := int(binary.LittleEndian.Uint32(EBRActual.part_size))
+				if FinAnterior != EBRStart {
+					Porcentaje = ((float64(EBRStart) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				Report += "\t\t\t\t\t\t\t\t<td>EBR</td>\n"
+				if EBRActual.part_status[0] == 'A' {
+					Porcentaje = (float64(EBRSize) * 100) / float64(MBRTamano)
+					Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Logica</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+				}
+				FinAnterior = EBRStart + EBRSize
+				Aux = int(binary.LittleEndian.Uint32(EBRActual.part_next))
+			}
+			if FinAnterior != Part4Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_4.part_size)) {
+				Porcentaje = ((float64(Part4Start+int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_4.part_size))) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+				Report += "\t\t\t\t\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t\t\t\t\t</table></td>\n"
+			}
+			Report += "\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td></tr>\n\t\t\t\t</table></td>\n"
+		}
+		FinAnterior = Part4Start + int(binary.LittleEndian.Uint32(MBRDsk.mbr_partition_4.part_size))
+	}
+
+	if MBRTamano != FinAnterior {
+		Porcentaje = ((float64(MBRTamano) - float64(FinAnterior)) * 100) / float64(MBRTamano)
+		Report += "\t\t\t\t<td><table border='0' cellborder='0' cellspacing='0'>\n\t\t\t\t\t<tr><td>Libre</td></tr>\n\t\t\t\t\t<tr><td>" + strconv.FormatFloat(Porcentaje, 'f', 2, 64) + "%</td></tr>\n\t\t\t\t</table></td>\n"
+	}
+
+	Report += "\t\t\t</tr>\n\t\t</table>\n\t>];\n}"
+
+	fmt.Println(Report)
 }
 
 //Funciones de manejo de carpetas y archivos
@@ -2105,21 +2584,26 @@ func FirstFreeInode() int {
 
 func Valor(Linea *string) string {
 	Val := ""
-	if (*Linea)[0] != '"' {
-		if strings.Index(*Linea, " ") != -1 && (strings.Index(*Linea, "=") == -1 || strings.Index(*Linea, " ") < strings.Index(*Linea, "=")) {
-			Val = (*Linea)[0:strings.Index(*Linea, " ")]
-			*Linea = (*Linea)[strings.Index(*Linea, " ")+1 : len((*Linea))]
-		} else if strings.Index(*Linea, "=") != -1 {
-			Val = (*Linea)[0:strings.Index(*Linea, "=")]
-			*Linea = (*Linea)[strings.Index(*Linea, "=")+1 : len((*Linea))]
+	if len(*Linea) != 0 {
+		if (*Linea)[0] != '"' {
+			if strings.Index(*Linea, " ") != -1 && (strings.Index(*Linea, "=") == -1 || strings.Index(*Linea, " ") < strings.Index(*Linea, "=")) {
+				Val = (*Linea)[:strings.Index(*Linea, " ")]
+				*Linea = (*Linea)[strings.Index(*Linea, " ")+1 : len((*Linea))]
+			} else if strings.Index(*Linea, "=") != -1 {
+				Val = (*Linea)[:strings.Index(*Linea, "=")]
+				*Linea = (*Linea)[strings.Index(*Linea, "=")+1 : len((*Linea))]
+			} else if strings.Index(*Linea, " ") == -1 && strings.Index(*Linea, "=") == -1 {
+				Val = (*Linea)[:]
+				*Linea = ""
+			}
+		} else {
+			*Linea = (*Linea)[1:len((*Linea))]
+			Val = (*Linea)[0:strings.Index(*Linea, "\"")]
+			*Linea = (*Linea)[strings.Index(*Linea, "\"")+1 : len((*Linea))]
 		}
-	} else {
-		*Linea = (*Linea)[1:len((*Linea))]
-		Val = (*Linea)[0:strings.Index(*Linea, "\"")]
-		*Linea = (*Linea)[strings.Index(*Linea, "\"")+1 : len((*Linea))]
-	}
-	for len(*Linea) > 0 && (*Linea)[0] == ' ' {
-		*Linea = (*Linea)[1:len((*Linea))]
+		for len(*Linea) > 0 && (*Linea)[0] == ' ' {
+			*Linea = (*Linea)[1:len((*Linea))]
+		}
 	}
 	return Val
 }

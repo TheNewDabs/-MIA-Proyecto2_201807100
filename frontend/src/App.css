@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700');
+
+.base {
+  text-align: center;
+  padding-top: 25px;
+  font-family: Poppins;
+}
+
+.main_form {
+  text-align: center;
+  background: #000;
+  padding: 35px 35px 35px 35px;
+  margin: 0px 35px;
+  border-radius: 40px;
+  margin-bottom: 0%;
+  opacity: 0.9;
+}
+
+.colorh3 {
+  font-size: 32px;
+  color: #fff;
+  line-height: 40px;
+  font-weight: bold;
+  padding: 0;
+}
+
+.base .main_form .contactus {
+  text-align: right;
+  border: #fff solid 1px;
+  padding: 0px 18px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  width: 100%;
+  height: 52px;
+  background: #fff;
+  color: #000;
+  font-size: 25px;
+  font-weight: 500;
+  overflow: auto;
+}
+
+.base .main_form .tecla {
+  padding: 12px 12px;
+  font-size: 20px;
+  font-weight: 500;
+  background-color:#000;
+  color:#fff;
+}
+
+.base .main_form .text {
+  background-color:#000;
+  color:#fff;
+  width: 45%;
+  height: 600px;
+  padding: 12px 12px;
+  margin-right: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  overflow: auto;
+  resize: none;
+}
+
+h1 {
+  font-size: 30px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* demo styles */
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
+section {
+  margin: 50px;
+}
+
+
+/* follow me template */
+.made-with-love {
+  margin-top: 40px;
+  padding: 10px;
+  clear: left;
+  text-align: center;
+  font-size: 10px;
+  font-family: arial;
+  color: #fff;
+}
+
+.made-with-love i {
+  font-style: normal;
+  color: #F50057;
+  font-size: 14px;
+  position: relative;
+  top: 2px;
+}
+
+.made-with-love a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.made-with-love a:hover {
+  text-decoration: underline;
+}
+
+/* for custom scrollbar for webkit browser*/
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
